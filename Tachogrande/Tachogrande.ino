@@ -8,11 +8,13 @@
 #define SerialVerde Serial2
 #define SerialAzul Serial3
 #define On 0
-#define Off 255
+#define Off 4096
 #define Debug
 #define Rojo 0
 #define Verde 1
 #define Azul 2
+
+
 //Variables
 /*int Control1[15] = {}; //R-V-A x5
   int Control2[15] = {}; //R-V-A x5
@@ -28,6 +30,7 @@ int CantAzul = 0; //Altura del Azul
 int CantControlRojo = 0; //Segun la "altura" la cantida de controladoras que hay que tocar
 int CantControlVerde = 0; //Segun la "altura" la cantida de controladoras que hay que tocar
 int CantControlAzul = 0; //Segun la "altura" la cantida de controladoras que hay que tocar
+
 
 //Constructores
 PCA9685 Controlador1; //Tiras 1-2-3-4-5
@@ -103,11 +106,27 @@ void Procesar() {
 }
 
 void Recorrer() {
-RecorrerControladoras();
+  RecorrerControladoras(Rojo, CantRojo, CantControlRojo);
+  RecorrerControladoras(Verde, CantVerde, CantControlVerde);
+  RecorrerControladoras(Azul, CantAzul, CantControlAzul);
 }
 
-int RecorrerControladoras() {
-
+int RecorrerControladoras(int Sum, int CantColor, int CantCtrl) {
+  int j = 0; //Inicio una variable para controlar la cantidad de veces que doy la vuelta.
+  for (int i = 0; i <= CantCtrl-1; i ++) {
+    for (int h = Sum; i <= 14; i + 3) {
+      Control[i][h] = On;
+      j++;
+      if (j == CantColor) break;
+    }
+  }
+  for (int i = CantCtrl-1 ; i <= 4; i++) {
+    for (int h = Sum + (j - ((CantCtrl-1)* 5)) * 3; i <= 14 ; i + 3) {
+      Control[i][h] = Off;
+      j++;
+      if (j == 24) break;
+    }
+  }
 }
 
 void Actualizar() {
