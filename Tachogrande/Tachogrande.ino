@@ -14,16 +14,23 @@
 #define Verde 1
 #define Azul 2
 
+#define PlanA
+//#define PlanB
+
+
 
 //Variables
-/*int Control1[15] = {}; //R-V-A x5
-  int Control2[15] = {}; //R-V-A x5
-  int Control3[15] = {}; //R-V-A x5
-  int Control4[15] = {}; //R-V-A x5
-  int Control5[12] = {}; //R-V-A x4
-*/
-
+#ifdef PlanA
 int Control[5][15];
+#endif
+#ifdef PlanB
+int Control1[15] = {}; //R-V-A x5
+int Control2[15] = {}; //R-V-A x5
+int Control3[15] = {}; //R-V-A x5
+int Control4[15] = {}; //R-V-A x5
+int Control5[12] = {}; //R-V-A x4
+#endif
+
 int CantRojo = 0; //Altura del Rojo
 int CantVerde = 0; //Altura del Verde
 int CantAzul = 0; //Altura del Azul
@@ -113,26 +120,61 @@ void Recorrer() {
 
 int RecorrerControladoras(int Sum, int CantColor, int CantCtrl) {
   int j = 0; //Inicio una variable para controlar la cantidad de veces que doy la vuelta.
-  for (int i = 0; i <= CantCtrl-1; i ++) {
+#ifdef PlanA
+  for (int i = 0; i <= CantCtrl - 1; i ++) {
     for (int h = Sum; i <= 14; i + 3) {
-      Control[i][h] = On;
-      j++;
       if (j == CantColor) break;
-    }
-  }
-  for (int i = CantCtrl-1 ; i <= 4; i++) {
-    for (int h = Sum + (j - ((CantCtrl-1)* 5)) * 3; i <= 14 ; i + 3) {
-      Control[i][h] = Off;
       j++;
-      if (j == 24) break;
+      Control[i][h] = On;
     }
   }
+  for (int i = CantCtrl - 1 ; i <= 4; i++) {
+    for (int h = Sum + (j - ((CantCtrl - 1) * 5)) * 3; i <= 14 ; i + 3) {
+      if (j == 24) break;
+      j++;
+      Control[i][h] = Off;
+    }
+  }
+#endif
+#ifdef PlanB
+  for (int i = 0; i <= CantCtrl - 1; i++) {
+    for (int h = Sum; i <= 14; i + 3) {
+      if (j == CantColor) break;
+      j++;
+      if (i == 0) Control1[h] = On;
+      if (i == 1) Control2[h] = On;
+      if (i == 2) Control3[h] = On;
+      if (i == 3) Control4[h] = On;
+      if (i == 4) Control5[h] = On;
+    }
+  }
+  for (int i = CantCtrl - 1; i <= 4; i++) {
+    for (int h = Sum + (j - ((CantCtrl - 1) * 5)) * 3; i <= 14 ; i + 3) {
+      if (j == 24) break;
+      j++;
+      if (i == 0) Control1[h] = Off;
+      if (i == 1) Control2[h] = Off;
+      if (i == 2) Control3[h] = Off;
+      if (i == 3) Control4[h] = Off;
+      if (i == 4) Control5[h] = Off;
+    }
+  }
+#endif
 }
 
 void Actualizar() {
+#ifdef PlanA
   Controlador1.setChannelsPWM(0, 15, Control[1]);
   Controlador2.setChannelsPWM(0, 15, Control[2]);
   Controlador3.setChannelsPWM(0, 15, Control[3]);
   Controlador4.setChannelsPWM(0, 15, Control[4]);
   Controlador5.setChannelsPWM(0, 12, Control[5]);
+#endif
+#ifdef PlanB
+  Controlador1.setChannelsPWM(0, 15, Control1);
+  Controlador2.setChannelsPWM(0, 15, Control2);
+  Controlador3.setChannelsPWM(0, 15, Control3);
+  Controlador4.setChannelsPWM(0, 15, Control4);
+  Controlador5.setChannelsPWM(0, 15, Control5);
+#endif
 }
