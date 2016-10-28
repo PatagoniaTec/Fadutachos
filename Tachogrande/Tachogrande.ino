@@ -68,6 +68,11 @@ void setup() {
 
 void loop() {
   LeerSerials();
+#ifdef debug
+  CantRojo = 24;
+  CantVerde = 24;
+  CantAzul = 24;
+#endif
   Procesar();
   Recorrer();
   Actualizar();

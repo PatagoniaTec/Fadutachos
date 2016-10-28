@@ -8,9 +8,10 @@
 #define Umbral 250
 #define Blanco 5
 #define Color 6
-#define Delay 100
+#define Delay 50
 #define Timeout 5000
 
+#define Debug
 
 //Variables
 long Tiempo = 0;
@@ -21,6 +22,9 @@ int ValorSensor = 0;
 SoftwareSerial RS485(7 , 8); // Rx-Tx para la comunicacion con el tacho grande.
 
 void setup() {
+#ifdef Debug
+  Serial.begin(9600);
+#endif
   RS485.begin(9600);
   pinMode(Pir , INPUT);
   pinMode(Blanco , OUTPUT);
@@ -51,7 +55,12 @@ void loop() {
         Tiempo = millis();
         int i = map (ValorSensor, Umbral, 1023 , 1 , 24);
         RS485.println(i);
+#ifdef Debug
+        Serial.println(i);
+        Serial.println(ValorSensor);
+#endif
       }
     }
   }
+  digitalWrite(Color, LOW);
 }
