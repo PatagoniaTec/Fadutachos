@@ -61,15 +61,18 @@ void loop() {
 }
 
 void LeerSerials () {
+  Serial.println("leyendo serials");
   if (SerialRojo.available()) {
-    CantRojo = SerialRojo.read();
+    CantRojo = SerialRojo.parseInt();
     Serial.println(CantRojo);
   }
   if (SerialVerde.available()) {
-    CantVerde = SerialVerde.read();
+    CantVerde = SerialVerde.parseInt();
+    Serial.println(CantVerde);
   }
   if (SerialAzul.available()) {
-    CantAzul = SerialAzul.read();
+    CantAzul = SerialAzul.parseInt();
+    Serial.println(CantAzul);
   }
 }
 
@@ -93,11 +96,11 @@ void Procesar() {
   if (CantAzul > 15 && CantAzul < 21) CantControlAzul = 4;
   if (CantAzul > 20 && CantAzul < 25) CantControlAzul = 5;
 
-#ifdef Debug
-  Serial.println(CantControlRojo);
-  Serial.println(CantControlVerde);
-  Serial.println(CantControlAzul);
-#endif
+  /*#ifdef Debug
+    Serial.println(CantControlRojo);
+    Serial.println(CantControlVerde);
+    Serial.println(CantControlAzul);
+    #endif*/
 }
 
 void Recorrer() {
@@ -123,10 +126,10 @@ int Recorrerpwmas(int Sum, int CantColor, int CantCtrl) {
       for (int h = Sum; h <= 14; h += 3) {
         if (j >= CantColor) break;
         j++;
-#ifdef Debug
-        Serial.println("Recorriendo ON");
-        Serial.println(j);
-#endif
+        /*#ifdef Debug
+                Serial.println("Recorriendo ON");
+                Serial.println(j);
+          #endif*/
         if (i == 1) pwm1.setPWM(h, 0, 4095);
         if (i == 2) pwm2.setPWM(h, 0, 4095);
         if (i == 3) pwm3.setPWM(h, 0, 4095);
@@ -140,11 +143,11 @@ int Recorrerpwmas(int Sum, int CantColor, int CantCtrl) {
       for (k ; k <= 14 ; k += 3) {
         if (j == 24) break;
         j++;
-#ifdef Debug
-        Serial.println("Recorriendo Off");
-        Serial.println(j);
-        Serial.println(i);
-#endif
+        /*#ifdef Debug
+                Serial.println("Recorriendo Off");
+                Serial.println(j);
+                Serial.println(i);
+          #endif*/
         if (i == 1) pwm1.setPWM(k, 4095, 0);
         if (i == 2) pwm2.setPWM(k, 4095, 0);
         if (i == 3) pwm3.setPWM(k, 4095, 0);

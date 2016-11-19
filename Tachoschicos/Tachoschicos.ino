@@ -23,15 +23,21 @@ SoftwareSerial RS485(7 , 8); // Rx-Tx para la comunicacion con el tacho grande.
 
 void setup() {
 #ifdef Debug
-  Serial.begin(9600);
+  Serial.begin(115200);
+  Serial.println("Iniciando");
 #endif
-  RS485.begin(9600);
+  RS485.begin(115200);
   pinMode(Pir , INPUT);
   pinMode(Blanco , OUTPUT);
   pinMode(Color , OUTPUT);
 }
 
 void loop() {
+#ifdef Debug
+  Serial.println("En el loop");
+#endif
+
+
   RS485.println(0);
   if (digitalRead(Pir) == 0) {
     int PWM = 0;
@@ -43,6 +49,10 @@ void loop() {
       delay(Delay);
       if (PWM == 255) SubeBaja = 1;
       if (PWM == 0) SubeBaja = 0;
+#ifdef Debug
+      Serial.println("En el while pir 0");
+#endif
+
     }
     digitalWrite(Blanco, LOW);
   }
@@ -51,13 +61,16 @@ void loop() {
     Tiempo = millis();
     while (millis() - Tiempo < Timeout) {
       ValorSensor = analogRead(Sensor);
+#ifdef Debug
+      //Serial.println(ValorSensor);
+#endif
       if (ValorSensor > Umbral) {
         Tiempo = millis();
-        int i = map (ValorSensor, Umbral, 1023 , 1 , 24);
+        int i = map (ValorSensor, Umbral, 600 , 1 , 23);
         RS485.println(i);
 #ifdef Debug
-        Serial.println(i);
         Serial.println(ValorSensor);
+        //Serial.println(i);
 #endif
       }
     }
